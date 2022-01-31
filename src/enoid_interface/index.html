@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>E-NOID INTERFACE</title>
+
+    <link rel="stylesheet" href="./style.css" />
+    <script type="text/javascript" src="./roslib.min.js"></script>
+
+    <script type="text/javascript" type="text/javascript">
+        // INIT
+        let ros = new ROSLIB.Ros({
+            url: "ws://192.168.100.111:9090",
+        });
+
+        ros.on("connection", function () {
+            console.log("Connected to websocket server.");
+        });
+
+        ros.on("error", function (error) {
+            console.log("Error connecting to websocket server: ", error);
+        });
+
+        ros.on("close", function () {
+            console.log("Connection to websocket server closed.");
+        });
+        // PUBLISHER
+        let status_pub = new ROSLIB.Topic({
+            ros: ros,
+            name: "/walk_cmd_status",
+            messageType: "std_msgs/Int32",
+        });
+
+        let feedback_mode_pub = new ROSLIB.Topic({
+            ros: ros,
+            name: "/feedback_status",
+            messageType: "std_msgs/Int32",
+        });
+
+        let walk_mode_pub = new ROSLIB.Topic({
+            ros: ros,
+            name: "/walk_mode_status",
+            messageType: "std_msgs/Int32",
+        });
+
+        let calibrate_pub = new ROSLIB.Topic({
+            ros: ros,
+            name: "/calibrate_status",
+            messageType: "std_msgs/Bool",
+        });
+
+        let record_pub = new ROSLIB.Topic({
+            ros: ros,
+            name: "/record_status",
+            messageType: "std_msgs/Bool",
+        });
+
+        let cmd_pub = new ROSLIB.Topic({
+            ros: ros,
+            name: "/walk_vel",
+            messageType: "geometry_msgs/Vector3",
+        });
+
+        let cntrl_pub = new ROSLIB.Topic({
+            ros: ros,
+            name: "/gain_control",
+            messageType: "geometry_msgs/Twist",
+        });
+
+
+        let ctrl_pub = new ROSLIB.Topic({
+            ros: ros,
+            name: "/walk_control",
+            messageType: "geometry_msgs/Vector3",
+        });
+
+        function walk_status(status) {
+            let status_msg = new ROSLIB.Message({
+                data: status,
+            });
+
+            let cmd_msg = new ROSLIB.Message({
+                x: Number(document.getElementById("cmd_x").value),
+                y: Number(document.getElementById("cmd_x").value),
+            });
+
+            status_pub.publish(status_msg);
+
+            if (status == 1) {
+                cmd_pub.publish(cmd_msg);
+            }
+        }
+
+        function control_gain() {
+            let cntrl_msg = new ROSLIB.Message({
+                linear: {
+                    x: Number(document.getElementById("pitch_p").value),
+                    y: Number(document.getElementById("roll_p").value),
+                },
+                angular: {
+                    x: Number(document.getElementById("pitch_d").value),
+                    y: Number(document.getElementById("roll_d").value),
+                }
+
+            });
+
+            cntrl_pub.publish(cntrl_msg);
+        }
+
+        function calibrate_status() {
+            let calibrate_msg = new ROSLIB.Message({
+                data: true,
+            });
+
+            calibrate_pub.publish(calibrate_msg);
+        }
+
+        function mode_feedback_status(data) {
+            let feedback_mode_msg = new ROSLIB.Message({
+                data: Number(data.value),
+            });
+
+            feedback_mode_pub.publish(feedback_mode_msg);
+        }
+
+        function mode_walk_status(data) {
+            let walk_mode_msg = new ROSLIB.Message({
+                data: Number(data.value),
+            });
+
+            walk_mode_pub.publish(walk_mode_msg);
+        }
+    </script>
+</head>
+<header>
+    <table style="width: 100%;">
+        <tr>
+            <td style="width:30%;">
+                <h1>E-NOID INTERFACE</h1>
+            </td>
+            <td style="width:70%; padding-right: 30px;"><img src="assets/ros_logo.png" alt="ROS Logo"
+                    style="width:13%; float: right; image-rendering: -webkit-optimize-contrast;"></td>
+        </tr>
+    </table>
+
+</header>
+
+<body>
+    <div>
+        <table class="Body_Content" width="100%">
+            <tr>
+                <td class="Walking">
+                    <div>
+                        <h2>WALK</h2>
+                        <table class="Walking_Content">
+                            <tr>
+                                <td colspan="3">
+                                    <label for="cmd_x">CMD X </label>
+                                    <input type="number" step="0.001" name="cmd_x" id="cmd_x" class="Input"
+                                        value="0.05" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    <label for="cmd_Y">CMD Y </label>
+                                    <input type="number" step="0.001" name="cmd_y" id="cmd_y" class="Input"
+                                        value="0.00" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button type="button" id="start" class="Start_Button" onclick="walk_status(1)">
+                                        START
+                                    </button>
+                                </td>
+                                <td>
+                                    <button type="button" id="stop" class="Stop_Button" onclick="walk_status(0)">
+                                        STOP
+                                    </button>
+                                </td>
+                                <td>
+                                    <button type="button" id="reset" class="Reset_Button" onclick="walk_status(-1)">
+                                        RESET
+                                    </button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </td>
+                <td class="Control">
+                    <div>
+                        <h2>CONTROL</h2>
+                        <table class="Control_Content">
+                            <tr>
+                                <td>
+                                    <label for="pitch_p">KP PITCH </label>
+                                    <input type="number" step="0.001" name="pitch_p" id="pitch_p" class="Input"
+                                        value="0.05" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label for="pitch_d">KD PITCH </label>
+                                    <input type="number" step="0.001" name="pitch_d" id="pitch_d" class="Input"
+                                        value="0.05" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label for="roll_p">KP ROLL </label>
+                                    <input type="number" step="0.001" name="roll_p" id="roll_p" class="Input"
+                                        value="0.05" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label for="roll_d">KD ROLL </label>
+                                    <input type="number" step="0.001" name="roll_d" id="roll_d" class="Input"
+                                        value="0.05" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button type="button" id="control_pub" class="Publish_Button"
+                                        onclick="control_gain()">
+                                        PUBLISH
+                                    </button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </td>
+                <td class="Log" rowspan="2">
+                    <div>
+                        <table>
+                            <tr>
+                                <h2>LOG</h2>
+                                <br>
+                                <script>
+                                    let log_sub = new ROSLIB.Topic({
+                                        ros: ros,
+                                        name: '/rosout',
+                                        messageType: 'rosgraph_msgs/Log'
+                                    });
+                                    let log_data = ""
+
+                                    log_sub.subscribe(function (message) {
+                                        data = (message.name).replace('/', '') + " " + " => " + " [ " + message.msg + " ] " + "\n\n";
+                                        log_data = log_data + data;
+                                        document.getElementById("log_area").value = log_data;
+                                        document.getElementById("log_area").scrollTop = document.getElementById("log_area").scrollHeight
+                                    });
+                                </script>
+                                <textarea class="Log_Area" name="log_area" id="log_area" cols="60" rows="20"></textarea>
+                            </tr>
+                            <tr>
+                                <button type="button" id="record" class="Record_Button" onclick="record_status()">
+                                    RECORD
+                                </button>
+                                <script>
+                                    let record_cond = false;
+                                    function record_status() {
+                                        let record_msg = new ROSLIB.Message({
+                                            data: !record_cond,
+                                        });
+
+                                        record_cond = !record_cond;
+
+                                        if (record_cond == false) {
+                                            document.getElementById("record").style.backgroundColor = "rgb(45, 164, 78)";
+                                        } else {
+                                            document.getElementById("record").style.backgroundColor = "rgb(237, 50, 55)";
+                                        }
+
+                                        record_pub.publish(record_msg);
+                                    }
+                                </script>
+                            </tr>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="Imu">
+                    <div>
+                        <h2>IMU</h2>
+                        <table class="Imu_Content">
+                            <tr>
+                                <td>
+                                    <button type="button" id="calibrate" class="Calibrate_Button"
+                                        onclick="calibrate_status()">
+                                        CALIBRATE
+                                    </button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </td>
+                <td class="Mode">
+                    <div>
+                        <h2>MODE</h2>
+                        <table class="Mode_Content">
+                            <tr>
+                                <td><input type="radio" id="no_fb" name="feedback" checked="checked"
+                                        onchange="mode_feedback_status(this)" value="0"> NO FEEDBACK</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td><input type="radio" id="ank_fb" name="feedback"
+                                        onchange="mode_feedback_status(this)" value="1"> ANKLE FEEDBACK</td>
+                                <td><input type="radio" id="static" name="mode_status" checked="checked"
+                                        onchange="mode_walk_status(this)" value="0"> STATIC</td>
+                            </tr>
+                            <tr>
+                                <td><input type="radio" id="step_fb" name="feedback"
+                                        onchange="mode_feedback_status(this)" value="2"> STEP FEEDBACK</td>
+                                <td><input type="radio" id="walk" name="mode_status" onchange="mode_walk_status(this)"
+                                        value="1"> WALK</td>
+                            </tr>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+
+</html>
