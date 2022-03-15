@@ -225,7 +225,7 @@ def final_test(pc, fz, ik):
 
 def main():
     global X_OFFSET, COM, com_msg
-    rospy.init_node('enoid_walk', anonymous=False)
+    rospy.init_node('terrainwalk_node', anonymous=False)
     rospy.Subscriber("ori_data", Vector3, ori_callback)
     rospy.Subscriber("gyr_data", Vector3, gyr_callback)
     rospy.Subscriber("walk_vel", Vector3, vel_callback)
@@ -285,8 +285,9 @@ def main():
                 delta_pitch = -gain_ctrl.linear.y * ori_data[1] + -gain_ctrl.angular.y * gyr_data[1] + gain_ctrl.angular.x * igl_data[1]
                 JOINTS[3] += delta_pitch
                 JOINTS[8] -= delta_pitch
-                # JOINTS[4] += delta_roll
-                JOINTS[9] -= delta_roll
+
+                JOINTS[4] -= delta_roll
+                JOINTS[9] += delta_roll
 
         sc.sync_write_pos(JOINTS)
 
