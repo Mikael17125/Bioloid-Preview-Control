@@ -9,11 +9,10 @@ class Kalman:
         self.C = np.array([[1,0,0,0],
                            [0,0,1,0]])
         self.P = np.eye(4)
-        self.Q = np.eye(4) * 0.001
-        self.R = np.eye(2) * 0.1
+        self.Q = np.eye(4) * 1
+        self.R = np.eye(2) * 10
         self.x_pred = np.zeros((4,1))
         self.y_pred = np.zeros((2,1))
-        print(self.Q,self.R)
 
     def state_prediction(self, dt, u):
         self.A = np.array([[1, -dt, 0, 0], [0, 1, 0, 0], [0, 0, 1, -dt], [0, 0, 0, 1]])

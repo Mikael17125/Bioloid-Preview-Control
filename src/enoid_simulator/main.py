@@ -10,7 +10,7 @@ p.connect(p.GUI)
 p.setAdditionalSearchPath(pybullet_data.getDataPath())
 
 # load urdf and set gravity
-p.setGravity(0,0,-10)
+p.setGravity(0,0,-9.8)
 planeId = p.loadURDF("plane.urdf")
 bioloid_init_pos = [0,0,0.3]
 bioloid_init_ori = p.getQuaternionFromEuler([0,0,0])

@@ -64,7 +64,7 @@ def main():
     time_start = rospy.Time.now().to_sec()
     phase = 0.0
 
-    state_time = np.array([10,1,10,2,10,3.5,10,2,10,2])#10,1,2,3.5,2,2,1,2,3.5,2,2,1,2,3.5,2,2,1,2,3.5,2,2,1,2,3.5,2,2
+    state_time = np.array([10,1,2,3.5,2,2,1,2,3.5,2,2,1,2,3.5,2,2,1,2,3.5,2,2,1,2,3.5,2,2])#10,1,10,2,10,3.5,10,2,10,2
 
     state = 0
 
@@ -86,113 +86,105 @@ def main():
         if state == 0:
             print("WAIT")
         if state == 1:
-            COM = bezier_curve_2D(phase, uCOM, np.matrix([0.025, 0.05, 0.23]))
+            COM = bezier_curve_2D(phase, uCOM, np.matrix([0.025, 0.052, 0.23]))
             #COM = bezier_curve_2D(phase, uCOM, np.matrix([0.025, -0.040, 0.23]))
             RIGHT =  bezier_curve_2D(phase, uRIGHT,  np.matrix([0.0, -48 / 1000, 0.0]))
             LEFT =   bezier_curve_2D(phase, uLEFT,  np.matrix([0.0, 48 / 1000, 0.0]))
-        if state == 2:
-            print("WAIT")
-        elif state == 3:
+        elif state == 2:
             #print("phase 1")
-            COM = bezier_curve_2D(phase, uCOM, np.matrix([0.015, 0.05, 0.22]))
+            COM = bezier_curve_2D(phase, uCOM, np.matrix([0.015, 0.052, 0.22]))
             RIGHT =   bezier_curve_4D(phase, uRIGHT, np.matrix([0.0, -48 / 1000, 0.05]), np.matrix([0.10, -48 / 1000, 0.07]), np.matrix([0.10, -48 / 1000, 0.022]))
-        if state == 4:
-            print("WAIT")
-        elif state == 5:
+        elif state == 3:
             COM = bezier_curve_2D(phase, uCOM, np.matrix([0.14, -0.05, 0.23]))
             ik.TILT = 18.5
-        if state == 6:
-            print("WAIT")
-        elif state == 7:
+        elif state == 4:
             #COM = bezier_curve_2D(phase, uCOM, np.matrix([0.11, -0.030, 0.22]))
             LEFT =   bezier_curve_4D(phase, uLEFT, np.matrix([0.0, 48 / 1000, 0.07]), np.matrix([0.10, 48 / 1000, 0.08]), np.matrix([0.10, 48 / 1000, 0.022]))
-        if state == 8:
-            print("WAIT")
-        elif state == 9:
+        elif state == 5:
             ik.TILT = 10.0
             COM = bezier_curve_2D(phase, uCOM, np.matrix([0.11, 0.0 , 0.25]))
 #..............................................tangga 2..............................................................
-#         elif state == 6:
-#             COM = bezier_curve_2D(phase, uCOM, np.matrix([0.025, 0.05, 0.23]))
-#             #COM = bezier_curve_2D(phase, uCOM, np.matrix([0.025, -0.040, 0.23]))
-#             RIGHT =  bezier_curve_2D(phase, uRIGHT,  np.matrix([0.0, -48 / 1000, 0.0]))
-#             LEFT =   bezier_curve_2D(phase, uLEFT,  np.matrix([0.0, 48 / 1000, 0.0]))
-#         elif state == 7:
-#             #print("phase 1")
-#             COM = bezier_curve_2D(phase, uCOM, np.matrix([0.015, 0.05, 0.22]))
-#             RIGHT =   bezier_curve_4D(phase, uRIGHT, np.matrix([0.0, -48 / 1000, 0.05]), np.matrix([0.10, -48 / 1000, 0.07]), np.matrix([0.10, -48 / 1000, 0.022]))
-#         elif state == 8:
-#             COM = bezier_curve_2D(phase, uCOM, np.matrix([0.14, -0.05, 0.23]))
-#             ik.TILT = 18.5
-#         elif state == 9:
-#             #COM = bezier_curve_2D(phase, uCOM, np.matrix([0.11, -0.030, 0.22]))
-#             LEFT =   bezier_curve_4D(phase, uLEFT, np.matrix([0.0, 48 / 1000, 0.07]), np.matrix([0.10, 48 / 1000, 0.08]), np.matrix([0.10, 48 / 1000, 0.022]))
-#         elif state == 10:
-#             ik.TILT = 10.0
-#             COM = bezier_curve_2D(phase, uCOM, np.matrix([0.11, 0.0 , 0.25]))
-# #................................................tangga 3...........................................................        
-#         elif state == 11:
-#             COM = bezier_curve_2D(phase, uCOM, np.matrix([0.025, 0.05, 0.23]))
-#             #COM = bezier_curve_2D(phase, uCOM, np.matrix([0.025, -0.040, 0.23]))
-#             RIGHT =  bezier_curve_2D(phase, uRIGHT,  np.matrix([0.0, -48 / 1000, 0.0]))
-#             LEFT =   bezier_curve_2D(phase, uLEFT,  np.matrix([0.0, 48 / 1000, 0.0]))
-#         elif state == 12:
-#             #print("phase 1")
-#             COM = bezier_curve_2D(phase, uCOM, np.matrix([0.015, 0.05, 0.22]))
-#             RIGHT =   bezier_curve_4D(phase, uRIGHT, np.matrix([0.0, -48 / 1000, 0.05]), np.matrix([0.10, -48 / 1000, 0.07]), np.matrix([0.10, -48 / 1000, 0.022]))
-#         elif state == 13:
-#             COM = bezier_curve_2D(phase, uCOM, np.matrix([0.14, -0.05, 0.23]))
-#             ik.TILT = 18.5
-#         elif state == 14:
-#             #COM = bezier_curve_2D(phase, uCOM, np.matrix([0.11, -0.030, 0.22]))
-#             LEFT =   bezier_curve_4D(phase, uLEFT, np.matrix([0.0, 48 / 1000, 0.07]), np.matrix([0.10, 48 / 1000, 0.08]), np.matrix([0.10, 48 / 1000, 0.022]))
-#         elif state == 15:
-#             ik.TILT = 10.0
-#             COM = bezier_curve_2D(phase, uCOM, np.matrix([0.11, 0.0 , 0.25]))
-# #................................................tangga 4...........................................................   
-#         elif state == 16:
-#             COM = bezier_curve_2D(phase, uCOM, np.matrix([0.025, 0.05, 0.23]))
-#             #COM = bezier_curve_2D(phase, uCOM, np.matrix([0.025, -0.040, 0.23]))
-#             RIGHT =  bezier_curve_2D(phase, uRIGHT,  np.matrix([0.0, -48 / 1000, 0.0]))
-#             LEFT =   bezier_curve_2D(phase, uLEFT,  np.matrix([0.0, 48 / 1000, 0.0]))
-#         elif state == 17:
-#             #print("phase 1")
-#             COM = bezier_curve_2D(phase, uCOM, np.matrix([0.015, 0.05, 0.22]))
-#             RIGHT =   bezier_curve_4D(phase, uRIGHT, np.matrix([0.0, -48 / 1000, 0.05]), np.matrix([0.10, -48 / 1000, 0.07]), np.matrix([0.10, -48 / 1000, 0.022]))
-#         elif state == 18:
-#             COM = bezier_curve_2D(phase, uCOM, np.matrix([0.14, -0.05, 0.23]))
-#             ik.TILT = 18.5
-#         elif state == 19:
-#             #COM = bezier_curve_2D(phase, uCOM, np.matrix([0.11, -0.030, 0.22]))
-#             LEFT =   bezier_curve_4D(phase, uLEFT, np.matrix([0.0, 48 / 1000, 0.07]), np.matrix([0.10, 48 / 1000, 0.08]), np.matrix([0.10, 48 / 1000, 0.022]))
-#         elif state == 20:
-#             ik.TILT = 10.0
-#             COM = bezier_curve_2D(phase, uCOM, np.matrix([0.11, 0.0 , 0.25]))
-# #................................................tangga 5...........................................................   
-#         elif state == 21:
-#             COM = bezier_curve_2D(phase, uCOM, np.matrix([0.025, 0.05, 0.23]))
-#             #COM = bezier_curve_2D(phase, uCOM, np.matrix([0.025, -0.040, 0.23]))
-#             RIGHT =  bezier_curve_2D(phase, uRIGHT,  np.matrix([0.0, -48 / 1000, 0.0]))
-#             LEFT =   bezier_curve_2D(phase, uLEFT,  np.matrix([0.0, 48 / 1000, 0.0]))
-#         elif state == 22:
-#             #print("phase 1")
-#             COM = bezier_curve_2D(phase, uCOM, np.matrix([0.015, 0.05, 0.22]))
-#             RIGHT =   bezier_curve_4D(phase, uRIGHT, np.matrix([0.0, -48 / 1000, 0.05]), np.matrix([0.10, -48 / 1000, 0.07]), np.matrix([0.10, -48 / 1000, 0.022]))
-#         elif state == 23:
-#             COM = bezier_curve_2D(phase, uCOM, np.matrix([0.14, -0.05, 0.23]))
-#             ik.TILT = 18.5
-#         elif state == 24:
-#             #COM = bezier_curve_2D(phase, uCOM, np.matrix([0.11, -0.030, 0.22]))
-#             LEFT =   bezier_curve_4D(phase, uLEFT, np.matrix([0.0, 48 / 1000, 0.07]), np.matrix([0.10, 48 / 1000, 0.08]), np.matrix([0.10, 48 / 1000, 0.022]))
-#         elif state == 25:
-#             ik.TILT = 10.0
-#             COM = bezier_curve_2D(phase, uCOM, np.matrix([0.11, 0.0 , 0.25]))
+        elif state == 6:
+            COM = bezier_curve_2D(phase, uCOM, np.matrix([0.025, 0.052, 0.23]))
+            #COM = bezier_curve_2D(phase, uCOM, np.matrix([0.025, -0.040, 0.23]))
+            RIGHT =  bezier_curve_2D(phase, uRIGHT,  np.matrix([0.0, -48 / 1000, 0.0]))
+            LEFT =   bezier_curve_2D(phase, uLEFT,  np.matrix([0.0, 48 / 1000, 0.0]))
+        elif state == 7:
+            #print("phase 1")
+            COM = bezier_curve_2D(phase, uCOM, np.matrix([0.015, 0.052, 0.22]))
+            RIGHT =   bezier_curve_4D(phase, uRIGHT, np.matrix([0.0, -48 / 1000, 0.05]), np.matrix([0.10, -48 / 1000, 0.07]), np.matrix([0.10, -48 / 1000, 0.022]))
+        elif state == 8:
+            COM = bezier_curve_2D(phase, uCOM, np.matrix([0.14, -0.05, 0.23]))
+            ik.TILT = 18.5
+        elif state == 9:
+            #COM = bezier_curve_2D(phase, uCOM, np.matrix([0.11, -0.030, 0.22]))
+            LEFT =   bezier_curve_4D(phase, uLEFT, np.matrix([0.0, 48 / 1000, 0.07]), np.matrix([0.10, 48 / 1000, 0.08]), np.matrix([0.10, 48 / 1000, 0.022]))
+        elif state == 10:
+            ik.TILT = 10.0
+            COM = bezier_curve_2D(phase, uCOM, np.matrix([0.11, 0.0 , 0.25]))
+#................................................tangga 3...........................................................        
+        elif state == 11:
+            COM = bezier_curve_2D(phase, uCOM, np.matrix([0.025, 0.052, 0.23]))
+            #COM = bezier_curve_2D(phase, uCOM, np.matrix([0.025, -0.040, 0.23]))
+            RIGHT =  bezier_curve_2D(phase, uRIGHT,  np.matrix([0.0, -48 / 1000, 0.0]))
+            LEFT =   bezier_curve_2D(phase, uLEFT,  np.matrix([0.0, 48 / 1000, 0.0]))
+        elif state == 12:
+            #print("phase 1")
+            COM = bezier_curve_2D(phase, uCOM, np.matrix([0.015, 0.052, 0.22]))
+            RIGHT =   bezier_curve_4D(phase, uRIGHT, np.matrix([0.0, -48 / 1000, 0.05]), np.matrix([0.10, -48 / 1000, 0.07]), np.matrix([0.10, -48 / 1000, 0.022]))
+        elif state == 13:
+            COM = bezier_curve_2D(phase, uCOM, np.matrix([0.14, -0.05, 0.23]))
+            ik.TILT = 18.5
+        elif state == 14:
+            #COM = bezier_curve_2D(phase, uCOM, np.matrix([0.11, -0.030, 0.22]))
+            LEFT =   bezier_curve_4D(phase, uLEFT, np.matrix([0.0, 48 / 1000, 0.07]), np.matrix([0.10, 48 / 1000, 0.08]), np.matrix([0.10, 48 / 1000, 0.022]))
+        elif state == 15:
+            ik.TILT = 10.0
+            COM = bezier_curve_2D(phase, uCOM, np.matrix([0.11, 0.0 , 0.25]))
+#................................................tangga 4...........................................................   
+        elif state == 16:
+            COM = bezier_curve_2D(phase, uCOM, np.matrix([0.025, 0.052, 0.23]))
+            #COM = bezier_curve_2D(phase, uCOM, np.matrix([0.025, -0.040, 0.23]))
+            RIGHT =  bezier_curve_2D(phase, uRIGHT,  np.matrix([0.0, -48 / 1000, 0.0]))
+            LEFT =   bezier_curve_2D(phase, uLEFT,  np.matrix([0.0, 48 / 1000, 0.0]))
+        elif state == 17:
+            #print("phase 1")
+            COM = bezier_curve_2D(phase, uCOM, np.matrix([0.015, 0.052, 0.22]))
+            RIGHT =   bezier_curve_4D(phase, uRIGHT, np.matrix([0.0, -48 / 1000, 0.05]), np.matrix([0.10, -48 / 1000, 0.07]), np.matrix([0.10, -48 / 1000, 0.022]))
+        elif state == 18:
+            COM = bezier_curve_2D(phase, uCOM, np.matrix([0.14, -0.05, 0.23]))
+            ik.TILT = 18.5
+        elif state == 19:
+            #COM = bezier_curve_2D(phase, uCOM, np.matrix([0.11, -0.030, 0.22]))
+            LEFT =   bezier_curve_4D(phase, uLEFT, np.matrix([0.0, 48 / 1000, 0.07]), np.matrix([0.10, 48 / 1000, 0.08]), np.matrix([0.10, 48 / 1000, 0.022]))
+        elif state == 20:
+            ik.TILT = 10.0
+            COM = bezier_curve_2D(phase, uCOM, np.matrix([0.11, 0.0 , 0.25]))
+#................................................tangga 5...........................................................   
+        elif state == 21:
+            COM = bezier_curve_2D(phase, uCOM, np.matrix([0.025, 0.052, 0.23]))
+            #COM = bezier_curve_2D(phase, uCOM, np.matrix([0.025, -0.040, 0.23]))
+            RIGHT =  bezier_curve_2D(phase, uRIGHT,  np.matrix([0.0, -48 / 1000, 0.0]))
+            LEFT =   bezier_curve_2D(phase, uLEFT,  np.matrix([0.0, 48 / 1000, 0.0]))
+        elif state == 22:
+            #print("phase 1")
+            COM = bezier_curve_2D(phase, uCOM, np.matrix([0.015, 0.052, 0.22]))
+            RIGHT =   bezier_curve_4D(phase, uRIGHT, np.matrix([0.0, -48 / 1000, 0.05]), np.matrix([0.10, -48 / 1000, 0.07]), np.matrix([0.10, -48 / 1000, 0.022]))
+        elif state == 23:
+            COM = bezier_curve_2D(phase, uCOM, np.matrix([0.14, -0.05, 0.23]))
+            ik.TILT = 18.5
+        elif state == 24:
+            #COM = bezier_curve_2D(phase, uCOM, np.matrix([0.11, -0.030, 0.22]))
+            LEFT =   bezier_curve_4D(phase, uLEFT, np.matrix([0.0, 48 / 1000, 0.07]), np.matrix([0.10, 48 / 1000, 0.08]), np.matrix([0.10, 48 / 1000, 0.022]))
+        elif state == 25:
+            ik.TILT = 10.0
+            COM = bezier_curve_2D(phase, uCOM, np.matrix([0.11, 0.0 , 0.25]))
             
         
         JOINTS = ik.solve(COM,LEFT, RIGHT)
 
         K = np.array([-0.04, -0.05])#gain proposional, gain derivatife (pitch)0.06, 0.01
-        Kr = np.array([-0.065, -0.05])#gain proposional, gain derivatife (roll)0.06, 0.06    -0.065, -0.05
+        Kr = np.array([-0.085, -0.06])#gain proposional, gain derivatife (roll)0.06, 0.06    -0.065, -0.05
         igl_data_roll += ori_data[0]
         #Kr = np.array([0.04, 0.05])
         #K = np.array([0.04, 0.1])

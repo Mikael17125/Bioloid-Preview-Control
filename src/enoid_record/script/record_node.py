@@ -10,7 +10,7 @@ def callback(msg):
     global record
     if(msg.data == 1 and record == False):
         record = True
-        command = "rosbag record /rosout"
+        command = "rosbag record /com_data /ori_data /gyr_data"
         command = shlex.split(command)
         callback.rosbag_proc = subprocess.Popen(command)
         rospy.loginfo("START RECORDING")
