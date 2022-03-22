@@ -8,7 +8,6 @@ from preview_controller import *
 from inverse_kinematic import *
 from servo_controller import *
 from fuzzy_logic import *
-import math
 
 ori_data = np.array([.0, .0, .0])
 gyr_data = np.array([.0, .0, .0])
@@ -23,7 +22,7 @@ push_data = Bool()
 com_msg = Vector3()
 
 FOOT_DISTANCE = 6.5 / 1000
-COM_HEIGHT = 210 / 1000 # 230/1000 -> normal , 210/1000 -> naik 8*
+COM_HEIGHT = 230 / 1000
 X_OFFSET = 5 / 1000
 COM_SWING = 115.5 / 1000
 
@@ -47,10 +46,8 @@ delta_step = 0.0
 
 
 def ori_callback(msg):
-    ori_data[0] = msg.x 
-    ori_data[1] = msg.y #normal
-    #ori_data[1] = msg.y - (0*math.pi)/180 #naik 8 derajat
-    #ori_data[1] = msg.y + (22*math.pi)/180 #turun 8 derajat
+    ori_data[0] = msg.x
+    ori_data[1] = msg.y 
 
 
 def gyr_callback(msg):
@@ -59,6 +56,7 @@ def gyr_callback(msg):
 
 
 def vel_callback(msg):
+    global cmd_vel
     cmd_vel = msg
 
 
@@ -227,8 +225,8 @@ def final_test(pc, fz, ik):
             com_msg.z = COM[0,2]
 
 def main():
-    global X_OFFSET, COM, com_msg
-    rospy.init_node('terrainwalk_node', anonymous=False)
+    global X_OFFSET, COM, com_msg, cmd_vel
+    rospy.init_node('velocityControl_walk', anonymous=False)
     rospy.Subscriber("ori_data", Vector3, ori_callback)
     rospy.Subscriber("gyr_data", Vector3, gyr_callback)
     rospy.Subscriber("walk_vel", Vector3, vel_callback)
@@ -252,10 +250,6 @@ def main():
 
     while not rospy.is_shutdown():
         
-        """walk_cmd.data = 1 -> start , -1 -> stop , 0 -> reset 
-        walk_mode.data = 1 -> walk , 0 -> static
-        feedback_mode.data = 0 -> no feedback , 1 -> ankle feedback, 2 -> step feedback"""
-
         if walk_cmd.data == -1:
 
             # print("RESET WALK")
@@ -264,23 +258,23 @@ def main():
 
         elif walk_cmd.data == 1:
 
+            pc.cmd_x = cmd_vel.x
+            # rospy.loginfo("cmd_x: %s", str(cmd_vel.x))
+
             if walk_mode.data == 1 and (feedback_mode.data == 2):
-                ik.TILT = 10
+                ik.TILT = 15
                 X_OFFSET = 18 /1000
                 final_test(pc, fz, ik)
             elif walk_mode.data == 1:
-                #ik.TILT = 15 #semakin kecil badan semakin kebelakang 
-                ik.TILT = 20 #naik 4 derajat
-                #ik.TILT = 10 #turun
-                #X_OFFSET = 18 /1000 #normal
-                X_OFFSET = 22 /1000 #naik 8 derajat #nilai offset semakin tinggi membuat badan semakin kedepan
+                ik.TILT = 15
+                X_OFFSET = 18 /1000
                 walk_test(pc, ik)
             elif (feedback_mode.data == 2):
                 ik.TILT = 10
                 push_test(fz, ik)
             else :
                 stand(ik)
-                ik.TILT = 5
+                ik.TILT = 10
                 X_OFFSET = 5 /1000
 
                 
@@ -295,8 +289,7 @@ def main():
                 delta_pitch = -gain_ctrl.linear.y * ori_data[1] + -gain_ctrl.angular.y * gyr_data[1] + gain_ctrl.angular.x * igl_data[1]
                 JOINTS[3] += delta_pitch
                 JOINTS[8] -= delta_pitch
-
-                #JOINTS[4] += delta_roll
+                # JOINTS[4] += delta_roll
                 JOINTS[9] -= delta_roll
 
         sc.sync_write_pos(JOINTS)

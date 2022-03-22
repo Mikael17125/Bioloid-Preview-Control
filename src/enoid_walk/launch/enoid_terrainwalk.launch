@@ -1,0 +1,8 @@
+<launch>
+    <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>
+    <include file="$(find enoid_orientation)/launch/mpu_node.launch"/>
+    <include file="$(find enoid_interface)/launch/enoid_interface.launch"/>
+
+    <node pkg="enoid_walk" type="coba_terrainwalk_node.py" name="enoid_terrainwalk" output="screen"></node>
+    <!-- <node pkg="rosbridge_websocket" type="" name="rosbridge_websocket" output="screen"></node> -->
+</launch>
