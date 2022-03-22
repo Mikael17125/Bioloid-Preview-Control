@@ -1,0 +1,3 @@
+<launch>
+    <node pkg="enoid_walk" type="velocityControl_node.py" name="velocityControl_node" output="screen"></node>
+</launch>

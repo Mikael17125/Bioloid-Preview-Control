@@ -1,0 +1,7 @@
+<launch>
+    <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>
+    <include file="$(find enoid_interface)/launch/enoid_interface.launch"/>
+
+    <node pkg="enoid_orientation" type="mpu_node.py" name="enoid_orientation" output="screen"></node>
+    <!-- <node pkg="rosbridge_websocket" type="" name="rosbridge_websocket" output="screen"></node> -->
+</launch>

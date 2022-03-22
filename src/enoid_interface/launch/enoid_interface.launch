@@ -1,0 +1,3 @@
+<launch>
+    <node pkg="enoid_interface" type="http_server.sh" name="http_server" output="screen"></node>
+</launch>
