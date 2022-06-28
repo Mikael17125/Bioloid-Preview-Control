@@ -1,0 +1,60 @@
+version: '3'
+
+networks:
+  ros:
+    driver: bridge
+services:
+  path-publisher:
+    depends_on:
+      - rviz-visualizer
+    container_name: path_generator
+    image: path-generator:1.0
+    command: rosrun path_generator path_generator_node.py
+    environment:
+      - "ROS_MASTER_URI=http://rviz-generator:11311"
+      - "SPLINE=0"
+      - "COORD=1"
+    networks:
+      - ros
+  path-reduction:
+    depends_on:
+      - rviz-visualizer
+      - ros-bag
+    container_name: path-reduction
+    image: path-reduction:1.0
+    command: rosrun path_reduction path_reduction_node.py
+    environment:
+      - "ROS_MASTER_URI=http://rviz-reduction:11311"
+      - "N_POINT=10"
+    networks:
+      - ros
+
+  ros-bag:
+    depends_on:
+      - rviz-visualizer
+    container_name: ros-bag
+    image: path-reduction:1.0
+    command: rosbag play /home/movel_ws/src/path_reduction/path_test.bag
+    environment:
+      - "ROS_MASTER_URI=http://rviz-reduction:11311"
+    networks:
+      - ros
+  
+  rviz-generator:
+    container_name: rviz_generator
+    image: rviz-visualizer:1.0
+    command: roslaunch rviz_visualizer generator.launch
+    environment:
+      - "ROS_MASTER_URI=http://rviz-generator:11311"
+      - "DISPLAY"
+    networks:
+      - ros
+  rviz-reduction:
+    container_name: rviz_reduction
+    image: rviz-visualizer:1.0
+    command: roslaunch rviz_visualizer reduction.launch
+    environment:
+      - "ROS_MASTER_URI=http://rviz-reduction:11311"
+      - "DISPLAY"
+    networks:
+      - ros
