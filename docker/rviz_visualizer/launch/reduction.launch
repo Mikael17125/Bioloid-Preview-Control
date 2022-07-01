@@ -1,3 +1,0 @@
-<launch>
-  <node type="rviz" name="rviz" pkg="rviz" args="-d $(find rviz_visualizer)/rviz/path_reduction.rviz" />
-</launch>
