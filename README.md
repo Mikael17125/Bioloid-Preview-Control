@@ -1,4 +1,4 @@
-# Skripsi
+# Documentation
 
 See documentation on my Notion
 <br>
