@@ -3,7 +3,7 @@
 See documentation on my Notion
 <br>
 
-Simulation : ![alt text](https://github.com/Mikael17125/Bioloid-Preview-Control/blob/5187be1038f75e132cd963debc6ca803a1492740/img/simulation.png) 
+Simulation : ![alt text](https://github.com/Mikael17125/Bioloid-Preview-Control/blob/9e3234a959fb43a5a8520227fa66f44bfc30dbc9/img/simulation.png) 
 
 
 https://dramatic-middle-7c9.notion.site/SKRIPSI-c7b654bd0ebc4cd78e7dc0772060c5e5
